@@ -37,6 +37,14 @@ func main(){
 	if err != nil {
 		log.Fatalf("Error while creating new user: %v", err)
 	}
+	post, err := dbManager.CreatePost(&Post{
+		UserId: 1,
+		UserPost: "I did it this job",
+	})
+	if err != nil {
+		log.Fatalf("Error while creating new post: %v", err)
+	}
+	fmt.Println(post)
 	user_post, err := dbManager.GetUser(1)
 	if err != nil {
 		log.Fatalf("Error while getting user and posts: %v", err)
