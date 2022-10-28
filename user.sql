@@ -12,7 +12,7 @@ CREATE TABLE posts (
     id SERIAL,
     user_id INTEGER, 
     user_post TEXT NOT NULL,
-    created_at TIMESTAMP,
+    created_at TIMESTAMP  DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP,
     deleted_at TIMESTAMP,
     FOREIGN KEY (user_id) REFERENCES users(id)

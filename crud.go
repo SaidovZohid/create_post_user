@@ -2,7 +2,6 @@ package main
 
 import (
 	"database/sql"
-	_ "fmt"
 	"time"
 )
 
@@ -68,6 +67,34 @@ func (d *DbManager) CreateUser(u *User) (*User, error) {
 		return nil, err
 	}
 	return &user, nil
+}
+
+func (d *DbManager) CreatePost(p *Post) (*Post, error){
+	var post Post
+	query := `
+		INSERT INTO posts(
+			user_id, 
+			user_post
+		) VALUES (
+			$1,
+			$2
+		) RETURNING id,user_id,user_post, created_at
+	`
+	row := d.db.QueryRow(
+		query,
+		p.UserId,
+		p.UserPost,
+	)
+	err := row.Scan(
+		&post.Id,
+		&post.UserId,
+		&post.UserPost,
+		&post.CreatedAt,
+	)
+	if err != nil {
+		return nil, err
+	}
+	return &post, nil
 }
 
 func (d *DbManager) GetUser(id int) ([]*GetUserStruct, error) {
