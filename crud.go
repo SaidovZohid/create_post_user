@@ -2,7 +2,7 @@ package main
 
 import (
 	"database/sql"
-	"fmt"
+	_ "fmt"
 	"time"
 )
 
@@ -15,30 +15,30 @@ func NewDBManager(db *sql.DB) *DbManager {
 }
 
 type User struct {
-	Id int
-	FirstName string
+	Id         int
+	FirstName  string
 	SecondName string
-	Age uint8
+	Age        uint8
+	CreatedAt  time.Time
+	UpdatedAt  time.Time
+	DeletedAt  time.Time
+}
+
+type Post struct {
+	Id        int
+	UserId    int
+	UserPost  string
 	CreatedAt time.Time
 	UpdatedAt time.Time
 	DeletedAt time.Time
 }
 
-type Post struct {
-	Id int
-	UserId int
-	UserPost string
-	CreatedAt time.Time
-	UpdatedAt time.Time
-	DeletedAt time.Time
-} 
-
 type GetUserStruct struct {
-	Id int
-	FirstName string
+	Id         int
+	FirstName  string
 	SecondName string
-	Age uint8
-	posts []Post
+	Age        uint8
+	posts      string
 }
 
 func (d *DbManager) CreateUser(u *User) (*User, error) {
@@ -70,8 +70,8 @@ func (d *DbManager) CreateUser(u *User) (*User, error) {
 	return &user, nil
 }
 
-func (d *DbManager) GetUser(id int) (*GetUserStruct, error){
-	// var user_posts *GetUserStruct
+func (d *DbManager) GetUser(id int) ([]*GetUserStruct, error) {
+	var user_posts []*GetUserStruct
 	query := `
 		SELECT 
 			users.id,
@@ -81,10 +81,24 @@ func (d *DbManager) GetUser(id int) (*GetUserStruct, error){
 			user_post
 		FROM users JOIN posts ON users.id = user_id;
 	`
-	row , err:= d.db.Query(query)
-	fmt.Println(row)
+	row, err := d.db.Query(query)
 	if err != nil {
 		return nil, err
 	}
-	return nil, err
+	defer row.Close()
+	for row.Next() {
+		var post GetUserStruct
+		err = row.Scan(
+			&post.Id,
+			&post.FirstName,
+			&post.SecondName,
+			&post.Age,
+			&post.posts,
+		)
+		if err != nil {
+			return nil, err
+		}
+		user_posts = append(user_posts, &post)
+	}
+	return user_posts, nil
 }
