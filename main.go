@@ -3,8 +3,8 @@ package main
 import (
 	"database/sql"
 	"fmt"
-	// "log"
-	"time"
+	"log"
+	// "time"
 
 	_ "github.com/lib/pq"
 )
@@ -78,10 +78,13 @@ func main(){
 	// 	Id: 1,
 	// 	DeletedAt: time.Now(),
 	// })
-	dbManager.DeletedPost(&Post{
-		Id: 4,
-		UserId: 1,
-		DeletedAt: time.Now(),
-	})
+	
+	users_posts, err := dbManager.GetList(5, 1)
+	if err != nil {
+		log.Fatalf("Error while getting all info: %v\n", err)
+	}
+	for _, v := range users_posts {
+		fmt.Println(*v)
+	}
 }
 

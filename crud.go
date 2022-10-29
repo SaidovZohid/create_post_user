@@ -215,3 +215,41 @@ func (d *DbManager) DeletedPost(p *Post) {
 		p.UserId,
 	)
 }
+
+func (d *DbManager) GetList(limit int, page int) ([]*GetUserStruct, error){
+	var offset int = (page - 1) * limit
+	var userPosts []*GetUserStruct
+	query := `
+		SELECT 
+			users.id,
+			first_name,
+			second_name,
+			age,
+			user_post
+		FROM users JOIN posts ON users.id = user_id WHERE posts.deleted_at is NULL AND users.deleted_at is NULL ORDER BY users.id LIMIT $1 OFFSET $2;
+
+	`
+	row, err := d.db.Query(
+		query,
+		limit,
+		offset,
+	)
+	if err != nil {
+		return nil, err
+	}
+	for row.Next() {
+		var res GetUserStruct
+		err := row.Scan(
+			&res.Id,
+			&res.FirstName,
+			&res.SecondName,
+			&res.Age,
+			&res.posts,
+		)
+		if err != nil {
+			return nil, err
+		}
+		userPosts = append(userPosts, &res)
+	}
+	return userPosts, nil
+}
