@@ -3,7 +3,8 @@ package main
 import (
 	"database/sql"
 	"fmt"
-	"log"
+	// "log"
+	"time"
 
 	_ "github.com/lib/pq"
 )
@@ -29,28 +30,58 @@ func main(){
 	  panic(err)
 	}
 	dbManager := NewDBManager(db)
-	_, err = dbManager.CreateUser(&User{
-		FirstName: "Zohid",
-		SecondName: "Saidov",
-		Age: 18,
-	})
-	if err != nil {
-		log.Fatalf("Error while creating new user: %v", err)
-	}
-	post, err := dbManager.CreatePost(&Post{
+	// _, err = dbManager.CreateUser(&User{
+	// 	FirstName: "Zohid",
+	// 	SecondName: "Saidov",
+	// 	Age: 18,
+	// })
+	// if err != nil {
+	// 	log.Fatalf("Error while creating new user: %v", err)
+	// }
+	// post, err := dbManager.CreatePost(&Post{
+	// 	UserId: 1,
+	// 	UserPost: "I did it this job",
+	// })
+	// if err != nil {
+	// 	log.Fatalf("Error while creating new post: %v", err)
+	// }
+	// fmt.Println(post)
+	// user_post, err := dbManager.GetUser(1)
+	// if err != nil {
+	// 	log.Fatalf("Error while getting user and posts: %v", err)
+	// }
+	// for _, v := range user_post {
+	// 	fmt.Println(*v)
+	// }
+	// user, err := dbManager.UpdateUser(&User{
+	// 	Id: 1,
+	// 	FirstName: "Ismoiljon",
+	// 	SecondName: "Rustamov",
+	// 	Age: 16,
+	// 	UpdatedAt: time.Now(),
+	// })
+	// if err != nil {
+	// 	log.Fatalf("Error while updating user: %v\n", err)
+	// }
+	// fmt.Println(*user)
+	// post, err := dbManager.UpdatePost(&Post{
+	// 	Id: 3,
+	// 	UserId: 1,
+	// 	UserPost: "Hp Pavilion Gaming",
+	// 	UpdatedAt: time.Now(),
+	// })
+	// if err != nil {
+	// 	log.Fatalf("Error while updating post: %v\n", err)
+	// }
+	// fmt.Println(*post)
+	// dbManager.DeleteUser(&User{
+	// 	Id: 1,
+	// 	DeletedAt: time.Now(),
+	// })
+	dbManager.DeletedPost(&Post{
+		Id: 4,
 		UserId: 1,
-		UserPost: "I did it this job",
+		DeletedAt: time.Now(),
 	})
-	if err != nil {
-		log.Fatalf("Error while creating new post: %v", err)
-	}
-	fmt.Println(post)
-	user_post, err := dbManager.GetUser(1)
-	if err != nil {
-		log.Fatalf("Error while getting user and posts: %v", err)
-	}
-	for _, v := range user_post {
-		fmt.Println(*v)
-	}
 }
 
